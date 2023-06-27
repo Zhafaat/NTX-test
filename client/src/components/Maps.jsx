@@ -54,7 +54,7 @@ function Maps() {
           >  
             <Popup keepInView>
               <h2>
-                Kantor cabang {marker.city}
+                {marker.city} branch office
               </h2>
             </Popup>
           </Marker>
