@@ -1,42 +1,53 @@
-// import React from 'react'
+// import react
+import { useContext} from 'react'
 
 // import library
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
 // import leaflet css
 import 'leaflet/dist/leaflet.css';
 
-// markers
-const markers = [
-  {
-    geocode: [48.86, 2.3522],
-    popUp: "Hello, I am pop up 1"
-  },
-  {
-    geocode: [48.85, 2.3522],
-    popUp: "Hello, I am pop up 2"
-  },
-  {
-    geocode: [48.855, 2.34],
-    popUp: "Hello, I am pop up 3"
-  }
-];
+// import GlobalContext
+import GlobalContext from '../context/GlobalContext';
+
+function MyComponent( {position} ) {
+  const map = useMap()
+  map.setView([position.geocode.latitude - 0.500, position.geocode.longitude], 7)
+  return null
+}
 
 function Maps() {
+
+  const { offices, selectOffice, setSelectOffice } = useContext(GlobalContext)
+
   return (
-    <MapContainer center={[48.8566, 2.3533]} zoom={13} className=" visible z-0">
+    <MapContainer center={[-8.6523,115.2184]} zoom={5} className=" visible z-0">
+      {
+        selectOffice && <MyComponent position={selectOffice} />
+      }
       <TileLayer 
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
 
       {
-        markers.map((marker, index) => (
-          <Marker key={index} position={marker.geocode}>
-            <Popup>
-              <h2>{marker.popUp}</h2>
+        offices.map((marker, index) => (
+          
+          <Marker 
+            key={index} 
+            title={marker.city} 
+            position={[marker.geocode.latitude, marker.geocode.longitude]}
+            eventHandlers={{
+              click: () => {
+                setSelectOffice(marker)
+              }
+            }}
+          >  
+            <Popup keepInView>
+              <h2>
+                Kantor cabang {marker.city}
+              </h2>
             </Popup>
-
           </Marker>
         ))
       }
